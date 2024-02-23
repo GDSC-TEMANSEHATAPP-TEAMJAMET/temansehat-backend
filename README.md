@@ -62,7 +62,7 @@ Create a `config.json` file in the same directory as `config.py` and fill it wit
 ```
 ### 3.4. Database Configuration
 Create the following tables in your database:
-
+```bash
 class users(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(25), primary_key=True)
@@ -107,6 +107,7 @@ class image(db.Model):
     user_id = db.Column(db.String(25), db.ForeignKey('users.user_id'), nullable=False)
     post_id = db.Column(db.String(25), db.ForeignKey('posts.post_id'), nullable=False)
     image_data = db.Column(db.LargeBinary, nullable=False)
+```
 
 ### 3.5. Update `config.py`
 
