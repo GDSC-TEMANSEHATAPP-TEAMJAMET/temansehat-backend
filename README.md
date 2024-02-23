@@ -60,12 +60,59 @@ Create a `config.json` file in the same directory as `config.py` and fill it wit
     "MAIL_PASSWORD": "your_mail_password"
 }
 ```
+### 3.4. Database Configuration
+Create the following tables in your database:
 
-### 3.4. Update `config.py`
+class users(db.Model):
+    __tablename__ = 'users'
+    user_id = db.Column(db.String(25), primary_key=True)
+    username = db.Column(db.String(255))
+    bio = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    pfp = db.Column(db.LargeBinary)
+    
+class mood(db.Model):
+    __tablename__ = 'mood'
+    mood_id = db.Column(db.String(25), primary_key=True)
+    user_id = db.Column(db.String(25), db.ForeignKey('users.user_id'), nullable=False)
+    feeling = db.Column(db.String(255), nullable=False)
+    story   = db.Column(db.String(355), nullable=False)
+    date    = db.Column(db.DateTime, nullable=False)
+    
+class posts(db.Model):
+    __tablename__ = 'posts'
+    post_id = db.Column(db.String(25), primary_key=True)
+    user_id = db.Column(db.String(25), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(255), nullable=False)
+    pfp = db.Column(db.LargeBinary)
+    title = db.Column(db.String(255), nullable=False)
+    desc = db.Column(db.Text(length='long'), nullable=False)
+    total_share = db.Column(db.Integer, default=0)
+    date_post = db.Column(db.DateTime, nullable=False)
+    total_like = db.Column(db.Integer, default=0)
+
+class comment(db.Model):
+    __tablename__ = 'comment'
+    comment_id = db.Column(db.String(25), primary_key=True)
+    post_id = db.Column(db.String(25), db.ForeignKey('posts.post_id'), nullable=False)
+    user_id = db.Column(db.String(25), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(255), nullable=False)
+    comment_desc = db.Column(db.Text(length='long'), nullable=False)
+    comment_date = db.Column(db.DateTime, nullable=False)
+    
+class image(db.Model):
+    __tablename__ = 'image'
+    image_id = db.Column(db.String(25), primary_key=True)
+    user_id = db.Column(db.String(25), db.ForeignKey('users.user_id'), nullable=False)
+    post_id = db.Column(db.String(25), db.ForeignKey('posts.post_id'), nullable=False)
+    image_data = db.Column(db.LargeBinary, nullable=False)
+
+### 3.5. Update `config.py`
 
 Configure the `SQLALCHEMY_DATABASE_URI` in the `config.py` file with your database URL.
 
-### 3.5. Run the Backend Server
+### 3.6. Run the Backend Server
 
 Execute the `main.py` file to start the backend server:
 
